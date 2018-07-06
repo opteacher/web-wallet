@@ -1,0 +1,54 @@
+{
+  "name": "web-wallet",
+  "version": "1.0.0",
+  "description": "demo for golang wallet",
+  "main": "app.js",
+  "scripts": {
+    "build": "webpack -d --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opteacher/web-wallet.git"
+  },
+  "author": "opteacher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/opteacher/web-wallet/issues"
+  },
+  "homepage": "https://github.com/opteacher/web-wallet#readme",
+  "dependencies": {
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-convert": "^1.2.0",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^4.0.2",
+    "koa-views": "^6.1.4",
+    "koa2-cors": "^2.0.5",
+    "lodash": "^4.17.10"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-vue-app": "^2.0.0",
+    "css-loader": "^0.28.11",
+    "element-ui": "^2.3.6",
+    "file-loader": "^1.1.11",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
+    "style-loader": "^0.21.0",
+    "url-loader": "^1.0.1",
+    "vue": "^2.5.16",
+    "vue-loader": "^15.0.2",
+    "vue-resource": "^1.5.0",
+    "vue-router": "^3.0.1",
+    "vue-style-loader": "^4.1.0",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.15",
+    "webpack-dev-server": "^3.1.3"
+  }
+}
