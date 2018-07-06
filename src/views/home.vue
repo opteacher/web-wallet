@@ -1,6 +1,6 @@
 <template>
     <main-layout>
-        <div class="container-fluid">
+        <div class="container-fluid pt-4">
             <el-row :gutter="20">
                 <el-col :span="18" :offset="3">
                     <div class="grid-content bg-purple"></div>
