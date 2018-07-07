@@ -1,9 +1,8 @@
 <template>
     <main-layout>
-        <adv-bar class="w-100 h-51" />
-        <div class="container-fluid">
+        <div class="container-fluid mt-5">
             <el-row :gutter="20">
-                <el-col :span="18" :offset="3">
+                <el-col :span="12" :offset="6">
                     <div class="grid-content bg-purple"></div>
                 </el-col>
             </el-row>
@@ -13,12 +12,10 @@
 
 <script>
     import mainLayout from "../layouts/main"
-    import advBar from "../components/advBar"
 
     export default {
         components: {
-            "main-layout": mainLayout,
-            "adv-bar": advBar
+            "main-layout": mainLayout
         }
     }
 </script>
