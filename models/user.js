@@ -7,8 +7,7 @@ module.exports = db.defineModel({
 	username:       db.Types.String,
 	password:       db.Types.String,
 	email:          db.Types.String,
-	phone:          db.Types.String,
-	addresses:      []
+	phone:          db.Types.String
 }, {
 	middle: {
 		create: {

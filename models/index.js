@@ -12,7 +12,9 @@ const db = require(`../databases/${cfg.type}`);
 
 // @steps{1}:引进所有模型
 const exp = {
-	"User": require("./user")
+	"User": require("./user"),
+	"DepositAddress": require("./depositAddress"),
+	"Asset": require("./asset")
 };
 
 // @steps{2}:根据模型之间的关系，生成前置路径
@@ -21,6 +23,7 @@ db.genPreRoutes(exp);
 // @steps{3}:遍历所有模型
 console.log("模型生成的路由：");
 router.get(`/model`, async ctx => {
+	
 	ctx.body = {version: cfg.version};
 });
 console.log("GET\t/model");
@@ -135,7 +138,7 @@ _.forIn(exp, (model, apiNam) => {
 					let values = {};
 					values[prop] = ctx.params.id;
 					ctx.body = {
-						data: await db.crteupd(preMdl, values, condition, {
+						data: await db.save(preMdl, values, condition, {
 							updMode: "append"
 						})
 					};

@@ -22,7 +22,8 @@ class Mysql {
 			String:     Sequelize.STRING,
 			Number:     Sequelize.INTEGER,
 			Date:       Sequelize.DATE,
-			Boolean:    Sequelize.BOOLEAN
+			Boolean:    Sequelize.BOOLEAN,
+			Decimal:    Sequelize.DECIMAL(64, 20)
 		};
 		this.Middles = {
 			select: "",
