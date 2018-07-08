@@ -13,7 +13,8 @@ const statc = require("koa-static");
 const views = require("koa-views");
 const cors = require("koa2-cors");
 
-const docs = require("./docs/index")({ path: __dirname });
+const models = require("./models/index").index;
+const docs = require("./docs/index")({path: __dirname});
 const router = require("./routes/index");
 
 const app = new Koa();
@@ -34,7 +35,10 @@ app.use(logger());
 app.use(statc(path.join(__dirname, "public")));
 
 // 指定页面目录
-app.use(views("./views", { extension: "html" }));
+app.use(views("./views", {extension: "html"}));
+
+// 模型路由
+app.use(models.routes(), models.allowedMethods());
 
 // 文档路由
 app.use(docs.routes(), docs.allowedMethods());
@@ -44,8 +48,8 @@ app.use(router.routes(), router.allowedMethods());
 
 // 错误跳转
 app.use(ctx => {
-    ctx.status = 404;
-    ctx.body = "error";
+	ctx.status = 404;
+	ctx.body = "error";
 });
 
 app.listen(process.env.PORT || 3000);

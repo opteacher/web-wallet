@@ -1,3 +1,6 @@
 {
-  "presets": ["env", "vue-app"]
+	"presets": [
+		"env",
+		"vue-app"
+	]
 }
