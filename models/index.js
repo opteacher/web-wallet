@@ -23,7 +23,7 @@ db.genPreRoutes(exp);
 // @steps{3}:遍历所有模型
 console.log("模型生成的路由：");
 router.get(`/model`, async ctx => {
-	
+
 	ctx.body = {version: cfg.version};
 });
 console.log("GET\t/model");

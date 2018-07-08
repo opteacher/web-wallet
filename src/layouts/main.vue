@@ -4,13 +4,13 @@
             <el-menu v-if="loginUserId !== undefined" :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                      @select="handleSelect" router>
                 <el-menu-item index="/">Web钱包</el-menu-item>
-                <el-menu-item index="2">资产</el-menu-item>
-                <el-menu-item index="3">充币</el-menu-item>
+                <el-menu-item index="/assets">资产</el-menu-item>
+                <el-menu-item index="/deposit">充币</el-menu-item>
                 <el-menu-item index="4">提币</el-menu-item>
                 <el-menu-item index="/" class="float-right" @click="doLogout">退出</el-menu-item>
                 <el-menu-item index="6" class="float-right">管理</el-menu-item>
             </el-menu>
-            <el-menu v-else class="el-menu-demo" mode="horizontal" @select="handleSelect" router>
+            <el-menu v-else class="el-menu-demo" :default-active="activeIndex" mode="horizontal" @select="handleSelect" router>
                 <el-menu-item index="/">Web钱包</el-menu-item>
                 <el-menu-item index="/logup" class="float-right">注册</el-menu-item>
                 <el-menu-item index="/login" class="float-right">登录</el-menu-item>
@@ -28,13 +28,14 @@
 	export default {
 		data() {
 			return {
-				activeIndex: "1",
+				activeIndex: "/",
 				loginUserId: undefined
 			}
 		},
 		methods: {
 			handleSelect(key, keyPath) {
-				console.log(key);
+				this.activeIndex = key;
+				console.log(this.activeIndex)
 			},
 			handleNavClick(event) {
 				console.log(event);
