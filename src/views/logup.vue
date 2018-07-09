@@ -55,7 +55,7 @@
 		},
 		methods: {
 			async doLogup() {
-				let result = await axios.post("/api/v1/user", this.form);
+				let result = await axios.post("/api/v1/user/log/up", this.form);
 				console.log(result);
 				window.location.href = "/#/login"
             },

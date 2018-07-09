@@ -183,10 +183,12 @@ class Mysql {
 						entity[key] = value;
 					}
 				}
-				return entity.save();
+				return entity.save().then(result => Promise.resolve(result.toJSON()));
 			})).catch(err => getErrContent(err));
 		} else {
-			return model.build(values).save().catch(err => getErrContent(err));
+			return model.build(values).save()
+				.then(result => Promise.resolve(result.toJSON()))
+				.catch(err => getErrContent(err));
 		}
 	}
 
@@ -210,6 +212,10 @@ class Mysql {
 				}
 			});
 		});
+	}
+
+	sync(model) {
+		return model.sync({ force: true });
 	}
 }
 

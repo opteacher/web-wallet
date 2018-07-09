@@ -24,3 +24,5 @@ const routes = [
 new Vue({
 	router: new VueRouter({routes})
 }).$mount("#app");
+
+export default routes

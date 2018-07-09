@@ -8,7 +8,7 @@ const db = require(`../databases/${cfg.type}`);
 // @includes:lodash
 // @includes:koa-router
 // @includes:../db/数据库类型
-// @includes:../config/api.json
+// @includes:../config/mdl.json
 
 // @steps{1}:引进所有模型
 const exp = {
@@ -16,17 +16,22 @@ const exp = {
 	"DepositAddress": require("./depositAddress"),
 	"Asset": require("./asset")
 };
+if(cfg.sync) {
+	(async () => {
+        await Promise.all(_.values(exp).map(model => db.sync(model)));
+        console.log("数据库模型同步完毕");
+	})();
+}
 
 // @steps{2}:根据模型之间的关系，生成前置路径
 db.genPreRoutes(exp);
 
 // @steps{3}:遍历所有模型
 console.log("模型生成的路由：");
-router.get(`/model`, async ctx => {
-
+router.get(`/mdl/v${cfg.version}/model`, async ctx => {
 	ctx.body = {version: cfg.version};
 });
-console.log("GET\t/model");
+console.log(`GET\t\t/mdl/v${cfg.version}/model`);
 _.forIn(exp, (model, apiNam) => {
 	// @steps{3_1}:检测用户定义的模型参数是否包含了所需的信息
 	if (!model.__extProperties) {
@@ -42,20 +47,18 @@ _.forIn(exp, (model, apiNam) => {
 		model.__extProperties.router = {};
 	}
 	if (!model.__extProperties.router.methods) {
-		model.__extProperties.router.methods = [
-			"GET", "POST", "PUT", "DELETE"
-		];
+		model.__extProperties.router.methods = [];
 	}
 
 	// @steps{3_2}:定义所有用到的URL
 	const modelName = model.__extProperties.infor.modelName;
-	const GetUrl = `/api/v${cfg.version}/${modelName}/:id`;
-	const AllUrl = `/api/v${cfg.version}/${modelName}s`;
-	const PostUrl = `/api/v${cfg.version}/${modelName}`;
+	const GetUrl = `/mdl/v${cfg.version}/${modelName}/:id`;
+	const AllUrl = `/mdl/v${cfg.version}/${modelName}s`;
+	const PostUrl = `/mdl/v${cfg.version}/${modelName}`;
 	const PutUrl = GetUrl;
 	const DelUrl = GetUrl;
 	const prePath = model.__extProperties.router.prePath;
-	const LnkUrl = prePath ? `/api/v${cfg.version}/${prePath.map(pp => pp[1]).join("/")}/${modelName}/:id` : null;
+	const LnkUrl = prePath ? `/mdl/v${cfg.version}/${prePath.map(pp => pp[1]).join("/")}/${modelName}/:id` : null;
 
 	// @steps{3_3}:遍历用户要求的method接口
 	model.__extProperties.router.methods.map(method => {
@@ -78,7 +81,7 @@ _.forIn(exp, (model, apiNam) => {
 						}, {ext: true})
 					};
 				});
-				console.log(`GET\t${GetUrl}`);
+				console.log(`GET\t\t${GetUrl}`);
 				break;
 			case "all":
 				// @steps{3_3_2_2}:*ALL*：查所有，**不会联表**
@@ -87,7 +90,7 @@ _.forIn(exp, (model, apiNam) => {
 						data: await db.select(model, ctx.query)
 					};
 				});
-				console.log(`GET\t${AllUrl}`);
+				console.log(`GET\t\t${AllUrl}`);
 				break;
 			case "post":
 				// @steps{3_3_2_3}:*POST*：**使用form表单提交**
@@ -105,7 +108,7 @@ _.forIn(exp, (model, apiNam) => {
 						data: await db.save(model, ctx.request.body, ctx.params)
 					};
 				});
-				console.log(`PUT\t${PutUrl}`);
+				console.log(`PUT\t\t${PutUrl}`);
 				break;
 			case "delete":
 				// @steps{3_3_2_5}:*DELETE*：同GET
@@ -119,7 +122,7 @@ _.forIn(exp, (model, apiNam) => {
 			case "link":
 				// @steps{3_3_2_6}:*LINK*：将对象关联到指定目标对象中（**对象已经被创建**）
 				//                         ```
-				//                         /api/vx/target/:tid/source/:sid
+				//                         /mdl/vx/target/:tid/source/:sid
 				//                         // 意味着source[sid]关联到target[tid]
 				//                         ```
 				LnkUrl && router.put(LnkUrl, async ctx => {
@@ -149,7 +152,7 @@ _.forIn(exp, (model, apiNam) => {
 				// @steps{3_3_2_7}:*PROP*：根据列名，查询对象属性，**会联表**
 				// @notice{steps{3_3_2_7}}:建议使用表名（可带复数）作为列名
 				extAttr.properties && extAttr.properties.map(prop => {
-					let PropUrl = `/api/v${cfg.version}/${modelName}/:id/${prop}`;
+					let PropUrl = `/mdl/v${cfg.version}/${modelName}/:id/${prop}`;
 					router.get(PropUrl, async ctx => {
 						ctx.body = {
 							data: await db.select(model, {
