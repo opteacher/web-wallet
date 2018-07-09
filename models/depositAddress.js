@@ -6,15 +6,13 @@ module.exports = db.defineModel({
 	address:        db.Types.String,
 	belong_user:    db.Types.Number,
 	asset:          db.Types.String,
-	balance:        db.Types.Decimal
+	available:      db.Types.Decimal,
+	frozen:         db.Types.Decimal
 }, {
 	router: {
 		methods: [
 			"GET",
-			"ALL",
-			"POST",
-			"PUT",
-			"DELETE"
+			"ALL"
 		]
 	}
 });

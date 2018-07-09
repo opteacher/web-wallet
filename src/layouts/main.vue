@@ -47,6 +47,9 @@
 		},
         created() {
 	        this.loginUserId = cookies.get("uuid")
+        },
+        mounted() {
+
         }
 	};
 </script>

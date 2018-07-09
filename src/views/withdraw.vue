@@ -31,35 +31,35 @@
 
 <script>
 	import mainLayout from "../layouts/main"
-    import axios from "axios"
-    import cookies from "../../utils/cookies"
-    import qrcode from "qrcode"
+	import axios from "axios"
+	import cookies from "../../utils/cookies"
+	import qrcode from "qrcode"
 
 	export default {
 		data() {
 			return {
-                assetAddresses: [],
+				assetAddresses: [],
 				selectedOption: {}
 			}
 		},
-        methods: {
-	        handleAssetChange() {
-            }
-        },
+		methods: {
+			handleAssetChange() {
+			}
+		},
 		components: {
 			"main-layout": mainLayout
 		},
-        async created() {
-		    try {
-		        let url = `/api/v1/user/${cookies.get("uuid")}/addresses`;
-                this.assetAddresses = (await axios.get(url)).data.data;
-			    this.selectedOption = this.assetAddresses[0];
-                let cvsQRCode = document.getElementById("cvsQRCode");
-                qrcode.toCanvas(cvsQRCode, this.selectedOption.address, { width: 400 });
-            } catch (e) {
-		        // @_@：页面上要对用户做交代
-            }
-        }
+		async created() {
+			try {
+				let url = `/api/v1/user/${cookies.get("uuid")}/addresses`;
+				this.assetAddresses = (await axios.get(url)).data.data;
+				this.selectedOption = this.assetAddresses[0];
+				let cvsQRCode = document.getElementById("cvsQRCode");
+				qrcode.toCanvas(cvsQRCode, this.selectedOption.address, { width: 400 });
+			} catch (e) {
+				// @_@：页面上要对用户做交代
+			}
+		}
 	}
 </script>
 

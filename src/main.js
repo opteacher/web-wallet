@@ -8,6 +8,7 @@ import login from "./views/login"
 import logup from "./views/logup"
 import assets from "./views/assets"
 import deposit from "./views/deposit"
+import withdraw from "./views/withdraw"
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
@@ -18,7 +19,8 @@ const routes = [
 	{ path: "/login", component: login },
 	{ path: "/logup", component: logup },
 	{ path: "/assets", component: assets },
-	{ path: "/deposit", component: deposit }
+	{ path: "/deposit", component: deposit },
+	{ path: "/withdraw", component: withdraw }
 ];
 
 new Vue({
