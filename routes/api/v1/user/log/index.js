@@ -26,7 +26,8 @@ router.post("/up", async ctx => {
                 address: addrResp.data,
                 belong_user: userResp.id,
                 asset: asset.symbol,
-                balance: 0
+                available: 0,
+                frozen: 0
             }, null, null));
         }
         await Promise.all(reqAry);
@@ -39,6 +40,12 @@ router.post("/up", async ctx => {
             error: e.message ? e.message : JSON.stringify(e)
         };
     }
+});
+
+router.put("/in", async ctx => {
+    ctx.body = {
+        data: "abcd"
+    };
 });
 
 module.exports = router;

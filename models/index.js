@@ -13,8 +13,9 @@ const db = require(`../databases/${cfg.type}`);
 // @steps{1}:引进所有模型
 const exp = {
 	"User": require("./user"),
+    "Asset": require("./asset"),
 	"DepositAddress": require("./depositAddress"),
-	"Asset": require("./asset")
+	"WithdrawAddress": require("./withdrawAddress")
 };
 if(cfg.sync) {
 	(async () => {

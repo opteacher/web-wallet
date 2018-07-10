@@ -6,5 +6,6 @@ module.exports = db.defineModel({
 	name:           db.Types.String,
 	symbol:         db.Types.String,
 	withdraw:       db.Types.Boolean,
-	deposit:        db.Types.Boolean
+	deposit:        db.Types.Boolean,
+	deprecated:		db.Types.Boolean
 }, null);

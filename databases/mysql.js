@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const Sequelize = require("sequelize");
+const Op = Sequelize.Op
 
 const cfg = require("../config/db").mysql;
 const getErrContent = require("../utils/message").getErrContent;
@@ -147,6 +148,33 @@ class Mysql {
 			}
 			if(condition.limit) {
 				delete conds.where.limit;
+			}
+
+			// 条件选择，目前只支持一个属性一个条件
+			for(let key in conds.where) {
+				let val = conds.where[key];
+                if(val instanceof Array) {
+                    switch(val[0]) {
+                        case "<":
+                            conds.where[key] = { [Op.lt]: val[1] };
+                            break;
+                        case ">":
+                            conds.where[key] = { [Op.gt]: val[1] };
+                            break;
+                        case "<=":
+                            conds.where[key] = { [Op.lte]: val[1] };
+                            break;
+                        case ">=":
+                            conds.where[key] = { [Op.gte]: val[1] };
+                            break;
+                        case "==":
+                            conds.where[key] = { [Op.eq]: val[1] };
+                            break;
+                        case "!=":
+                            conds.where[key] = { [Op.ne]: val[1] };
+                            break;
+                    }
+                }
 			}
 		}
 

@@ -27,24 +27,23 @@
 
 <script>
 	import mainLayout from "../layouts/main"
+    import axios from "axios"
+    import cookies from "../../utils/cookies"
 
 	export default {
 		data() {
 			return {
-				tableData: [
-                    {
-                    	asset: "ETH",
-                        available: 0,
-	                    frozen: 0,
-	                    deposit: true,
-	                    withdraw: false
-                    }
-                ]
+				tableData: []
             }
         },
 		components: {
 			"main-layout": mainLayout
-		}
+		},
+        async created() {
+		    this.tableData = (
+                await axios.get(`/api/v1/user/${cookies.get("uuid")}/assets`)
+            ).data.data;
+        }
 	}
 </script>
 

@@ -6,9 +6,9 @@
                 <el-menu-item index="/">Web钱包</el-menu-item>
                 <el-menu-item index="/assets">资产</el-menu-item>
                 <el-menu-item index="/deposit">充币</el-menu-item>
-                <el-menu-item index="4">提币</el-menu-item>
+                <el-menu-item index="/withdraw">提币</el-menu-item>
                 <el-menu-item index="/" class="float-right" @click="doLogout">退出</el-menu-item>
-                <el-menu-item index="6" class="float-right">管理</el-menu-item>
+                <el-menu-item index="/manage" class="float-right">管理</el-menu-item>
             </el-menu>
             <el-menu v-else class="el-menu-demo" :default-active="activeIndex" mode="horizontal" @select="handleSelect" router>
                 <el-menu-item index="/">Web钱包</el-menu-item>

@@ -48,7 +48,7 @@
 				window.location.href = "/#/logup"
 			},
 			doLogin() {
-				cookies.set("uuid", 3);
+				cookies.set("uuid", 1);
 				window.location.href = "/#/"
             }
 		}
