@@ -2,7 +2,7 @@
     <main-layout>
         <div class="container-fluid mt-5">
             <el-row :gutter="20">
-                <el-col :span="8" :offset="8">
+                <el-col :span="12" :offset="6">
                     <div class="grid-content bg-purple p-4">
                         <el-form label-position="left" ref="form" :model="form" label-width="80px">
                             <el-form-item label="资产">
@@ -103,7 +103,7 @@
             async generateNewAddress() {
                 this.addresses.push(
                     (
-                        await axios.post(`/api/v1/user/${cookies.get("uuid")}/assets/${this.selAsset}/address`)
+                        await axios.post(`/api/v1/user/${cookies.get("uuid")}/assets/${this.form.asset}/address`)
                     ).data.data
                 );
             },

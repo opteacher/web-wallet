@@ -45,10 +45,12 @@ router.get("/:uid/withdraw/addresses", async ctx => {
 
 router.get("/:uid/assets", async ctx => {
     try {
-        let collectEmptyAsset = ctx.request.query.empty || true;
-        collectEmptyAsset = !(!collectEmptyAsset
-            || collectEmptyAsset.toLocaleLowerCase() === "false"
-            || collectEmptyAsset === "0");
+        let collectEmptyAsset = true;
+        if(ctx.request.query.empty) {
+	        collectEmptyAsset = !(!ctx.request.query.empty
+		        || ctx.request.query.empty.toLowerCase() === "false"
+		        || ctx.request.query.empty === "0");
+        }
 
         let conds = {
             belong_user: ctx.params.uid
