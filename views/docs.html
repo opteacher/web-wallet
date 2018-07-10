@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>文档系统</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        /*
+         * Base structure
+         */
+
+        /* Move down content because we have a fixed navbar that is 50px tall */
+        body {
+            padding-top: 50px;
+        }
+
+        a {
+            cursor: pointer;
+        }
+
+        blockquote {
+            font-size: 14px !important;
+        }
+
+        .mt-0 {
+            margin-top: 0 !important;
+        }
+
+        .br-1 {
+            border-right: 1px solid #ACACAC;
+        }
+
+        .bt-0 {
+            border-top: none !important;
+        }
+
+
+        /*
+         * Global add-ons
+         */
+
+        .sub-header {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /*
+         * Top navigation
+         * Hide default border to remove 1px line.
+         */
+        .navbar-fixed-top {
+            border: 0;
+        }
+
+        /*
+         * Sidebar
+         */
+
+        /* Hide for mobile, show later */
+        .sidebar {
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 51px;
+                bottom: 0;
+                left: 0;
+                z-index: 1000;
+                display: block;
+                padding: 20px;
+                overflow-x: hidden;
+                overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+                background-color: #f5f5f5;
+                border-right: 1px solid #eee;
+            }
+        }
+
+        /* Sidebar navigation */
+        .nav-sidebar {
+            margin-right: -21px; /* 20px padding + 1px border */
+            margin-bottom: 20px;
+            margin-left: -20px;
+        }
+        .nav-sidebar > li > a {
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+        .nav-sidebar > .active > a,
+        .nav-sidebar > .active > a:hover,
+        .nav-sidebar > .active > a:focus {
+            color: #fff;
+            background-color: #428bca;
+        }
+
+
+        /*
+         * Main content
+         */
+
+        .main {
+            padding: 20px;
+        }
+        @media (min-width: 768px) {
+            .main {
+                padding-right: 40px;
+                padding-left: 40px;
+            }
+        }
+        .main .page-header {
+            margin-top: 0;
+        }
+
+
+        /*
+         * Placeholder dashboard ideas
+         */
+
+        .placeholders {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .placeholders h4 {
+            margin-bottom: 0;
+        }
+        .placeholder {
+            margin-bottom: 20px;
+        }
+        .placeholder img {
+            display: inline-block;
+            border-radius: 50%;
+        }
+
+        .panel .table tr:first-child td {
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+<div id="docsPage">
+    <!-- navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">文档系统</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right"></ul>
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- container -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- sidebar -->
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li :class="{ active: file === curFile }" v-for="file in fileList">
+                        <a @click="clkSidebarItem">{{file}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- main -->
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div class="panel panel-default" v-for="block in blocks">
+                    <div class="panel-body">
+                        <!-- 块名 -->
+                        <h3 class= "mt-0" v-if="typeof block.block === 'string'">
+                            {{block.block}}
+                            <span class="label label-primary" v-if="block.type">{{block.type}}</span>
+                            <a class="pull-right">
+                                <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                            </a>
+                        </h3>
+                        <h3 class= "mt-0" v-else>
+                            {{block.block.content}}（{{block.block.object}}）
+                            <span class="label label-primary" v-if="block.type">{{block.type}}</span>
+                            <a class="pull-right">
+                                <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                            </a>
+                        </h3>
+                        <hr/>
+                        <table class="table">
+                            <tbody>
+                            <tr v-if="block.role">
+                                <td>作用</td>
+                                <td>{{block.role}}</td>
+                            </tr>
+                            <tr v-if="block.includes">
+                                <td>依赖</td>
+                                <td>
+                                    <ul class="list-inline">
+                                        <li v-for="include in block.includes">
+                                            <a>{{include.trim()}}</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr v-if="block.params">
+                                <td>参数</td>
+                                <td>
+                                    <div class="row" v-if="block.params.content">
+                                        <div class="col-xs-2"><em>{{block.params.object}}</em></div>
+                                        <div class="col-xs-2" v-if="block.params.type">
+                                            <span class="label label-success">{{block.params.type}}</span>
+                                        </div>
+                                        <div v-html="cvtTxtToMD(block.params.content)"></div>
+                                    </div>
+                                    <ul class="list-unstyled" v-if="block.params instanceof Array">
+                                        <li v-for="param in block.params">
+                                            <div class="row">
+                                                <div class="col-xs-2"><em>{{param.object}}</em></div>
+                                                <div class="col-xs-2" v-if="param.type">
+                                                    <span class="label label-success">{{param.type}}</span>
+                                                </div>
+                                                <div v-html="cvtTxtToMD(param.content)"></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr v-if="block.return">
+                                <td>返回值</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-xs-2"><em>{{block.return.object}}</em></div>
+                                        <div class="col-xs-2" v-if="block.return.type">
+                                            <span class="label label-success">{{block.return.type}}</span>
+                                        </div>
+                                        <div v-html="cvtTxtToMD(block.return.content)"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-if="block.description">
+                                <td>描述</td>
+                                <td>
+                                    <div v-html="cvtTxtToMD(block.description)"></div>
+                                </td>
+                            </tr>
+                            <tr v-if="block.steps">
+                                <td>流程</td>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <li v-for="step in block.steps">
+                                            <div class="row">
+                                                <div class="col-md-1">{{step.object}}</div>
+                                                <div class="col-md-11" v-html="cvtTxtToMD(step.content)"></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr v-if="block.examples">
+                                <td>示例</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="https://vuejs.org/js/vue.min.js"></script>
+<!-- <script src="https://unpkg.com/marked@0.3.6"></script> -->
+<script src="/js/markdown.min.js"></script>
+
+<script type="text/javascript">
+	new Vue({
+		el: "#docsPage",
+		data: {
+			version: "1",
+			fileList: [],
+			curFile: "",
+			blocks: []
+		},
+		created: function() {
+			var self = this
+			$.get(`${window.location.origin}/doc`).then(function(docInfo) {
+				self.version = docInfo.version
+				return $.get(`${window.location.origin}/doc/v${self.version}/file-list`)
+			}).then(function(result) {
+				self.fileList = result.data ? result.data : result
+			}).fail(function(error) { console.error(error) })
+		},
+		methods: {
+			clkSidebarItem: function(e) {
+				var self = this
+				var fname = e.target.innerHTML;
+				fname = fname.replace(/.\w+$/, "");
+				var url = `${window.location.origin}/doc/v${self.version}/${fname}?api=`
+				$.get(url).then(function(data) {
+					data = data.data || data
+					self.curFile = data[0]
+					self.blocks = data[1]
+				}).fail(function(error) { console.error(error) })
+			},
+			cvtTxtToMD: function(txt) {
+				return markdown.toHTML(txt)
+				// return marked(txt, { sanitize: true })
+			}
+		}
+	})
+</script>
+</body>
+</html>
