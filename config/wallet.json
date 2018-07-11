@@ -1,4 +1,6 @@
 {
   "host": "http://127.0.0.1",
-  "port": 8037
+  "port": 8037,
+  "account": "0x1c6f567e577a351917615fb1c8f1222dc96ba18d",
+  "password": "FROM"
 }

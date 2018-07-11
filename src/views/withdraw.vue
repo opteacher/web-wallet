@@ -7,7 +7,11 @@
                         <el-form label-position="left" ref="form" :model="form" label-width="80px">
                             <el-form-item label="资产">
                                 <el-select class="w-100" v-model="form.asset" placeholder="请选择资产" @change="handleChangeAsset">
-                                    <el-option v-for="aa in avaAssets" :label="aa.asset" :value="aa.asset">
+                                    <el-option
+                                            v-for="aa in avaAssets"
+                                            :key="aa.asset"
+                                            :label="aa.asset"
+                                            :value="aa.asset">
                                         <span style="float: left">{{ aa.asset }}</span>
                                         <span style="float: right; color: #8492a6; font-size: 13px">{{ aa.available }}</span>
                                     </el-option>
@@ -16,7 +20,11 @@
                             <el-form-item label="目标地址">
                                 <el-col class="p-0" :span="18">
                                     <el-select class="w-100" v-model="form.target" placeholder="请选择转出地址">
-                                        <el-option v-for="addr in addresses" :label="addr.address" :value="addr.address">
+                                        <el-option
+                                                v-for="addr in addresses"
+                                                :key="addr.address"
+                                                :label="addr.address"
+                                                :value="addr.address">
                                         </el-option>
                                     </el-select>
                                 </el-col>
@@ -111,7 +119,7 @@
                 this.form.address = val.address;
             },
             async sendTransfer() {
-		        let result = await axios.post(`/api/v1/transaction/withdraw`, this.form);
+		        let result = await axios.post(`/api/v1/tx/withdraw`, this.form);
 		        console.log(result);
             }
 		},

@@ -2,9 +2,9 @@ const _ = require("lodash");
 const router = require("koa-router")();
 const axios = require("axios");
 
-const walletCfg = require("../../../../config/wallet");
+const walletCfg = require("../../../../../config/wallet");
 
-router.post("/withdraw", async ctx => {
+router.post("/", async ctx => {
     try {
         // @_@：生成提币id
         let body = ctx.request.body;

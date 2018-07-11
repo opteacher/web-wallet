@@ -3,7 +3,7 @@
         <div class="container-fluid mt-5">
             <el-row :gutter="20">
                 <el-col :span="12" :offset="6">
-                    <div class="grid-content bg-purple p-2">
+                    <div class="grid-content bg-purple p-2 mb-3">
                         <el-select class="mb-2 w-100"
                                    placeholder="选择资产"
                                    v-model="selectedAsset"
@@ -18,13 +18,50 @@
                             <canvas id="cvsQRCode" class="img-fluid rounded"></canvas>
                         </div>
                         <div class="text-center">
-                            <el-input v-model="selectedAddress" placeholder="充币地址" style="width: 400px">
+                            <el-input v-model="address" placeholder="充币地址" style="width: 400px">
                                 <el-button slot="append">复制</el-button>
                             </el-input>
                         </div>
                     </div>
                 </el-col>
+                <el-col :span="6">
+                    <el-button type="danger" @click="testDeposit">测试充币</el-button>
+                </el-col>
             </el-row>
+            <el-table
+                    :data="deposits"
+                    height="250"
+                    style="width: 100%">
+                <el-table-column
+                        prop="id"
+                        label="#"
+                        width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="amount"
+                        label="金额"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="create_time"
+                        label="发现时间"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="height"
+                        label="高度"
+                        width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="tx_hash"
+                        label="交易ID">
+                </el-table-column>
+                <el-table-column
+                        prop="status"
+                        label="状态"
+                        width="150">
+                </el-table-column>
+            </el-table>
         </div>
     </main-layout>
 </template>
@@ -40,14 +77,22 @@
 			return {
                 assetAddresses: [],
                 selectedAsset: "",
-                selectedAddress: ""
+                address: "",
+                deposits: []
 			}
 		},
         methods: {
 	        handleAssetChange(address) {
-                this.selectedAddress = address;
+                this.address = address;
                 let cvsQRCode = document.getElementById("cvsQRCode");
-                qrcode.toCanvas(cvsQRCode, this.selectedAddress, { width: 400 });
+                qrcode.toCanvas(cvsQRCode, this.address, { width: 400 });
+            },
+            async testDeposit() {
+	            console.log(await axios.post("/api/v1/tx/deposit/test", {
+                    asset: this.selectedAsset,
+                    to: this.address,
+                    value: 10
+                }));
             }
         },
 		components: {
@@ -62,10 +107,17 @@
                         value: item.address
                     };
                 });
-			    this.selectedAddress = this.assetAddresses[0].value;
+			    this.address = this.assetAddresses[0].value;
 			    this.selectedAsset = this.assetAddresses[0].label;
                 let cvsQRCode = document.getElementById("cvsQRCode");
-                qrcode.toCanvas(cvsQRCode, this.selectedAddress, { width: 400 });
+                qrcode.toCanvas(cvsQRCode, this.address, { width: 400 });
+
+                this.deposits = (await axios.get("/api/v1/tx/deposit", {
+                    params: {
+                        asset: this.selectedAsset,
+                        address: this.address
+                    }
+                })).data.data;
             } catch (e) {
 		        // @_@：页面上要对用户做交代
             }

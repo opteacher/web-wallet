@@ -31,6 +31,7 @@
 		"koa-views": "^6.1.4",
 		"koa2-cors": "^2.0.5",
 		"lodash": "^4.17.10",
+		"moment": "^2.22.2",
 		"mysql2": "^1.5.3",
 		"sequelize": "^4.38.0",
 		"uuid": "^3.3.2"
@@ -44,8 +45,9 @@
 		"element-ui": "^2.3.6",
 		"file-loader": "^1.1.11",
 		"holderjs": "^2.9.4",
-		"node-sass": "^4.9.0",
+		"node-sass": "^4.9.2",
 		"qrcode": "^1.2.0",
+		"redis": "^2.8.0",
 		"sass-loader": "^7.0.1",
 		"style-loader": "^0.21.0",
 		"url-loader": "^1.0.1",
