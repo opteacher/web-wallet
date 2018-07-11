@@ -15,7 +15,8 @@ const exp = {
 	"User": require("./user"),
     "Asset": require("./asset"),
 	"DepositAddress": require("./depositAddress"),
-	"WithdrawAddress": require("./withdrawAddress")
+	"WithdrawAddress": require("./withdrawAddress"),
+	"WithdrawRecord": require("./withdrawRecord")
 };
 if(cfg.sync) {
 	(async () => {

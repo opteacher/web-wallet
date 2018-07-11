@@ -59,7 +59,7 @@
                 <el-table-column
                         prop="status"
                         label="状态"
-                        width="150">
+                        width="100">
                 </el-table-column>
             </el-table>
         </div>
@@ -88,11 +88,11 @@
                 qrcode.toCanvas(cvsQRCode, this.address, { width: 400 });
             },
             async testDeposit() {
-	            console.log(await axios.post("/api/v1/tx/deposit/test", {
-                    asset: this.selectedAsset,
-                    to: this.address,
-                    value: 10
-                }));
+	            this.$message((await axios.post("/api/v1/tx/deposit/test", {
+		            asset: this.selectedAsset,
+		            to: this.address,
+		            amount: 10
+	            })).data.data);
             }
         },
 		components: {
