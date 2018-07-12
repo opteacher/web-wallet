@@ -120,7 +120,9 @@
             },
             async sendTransfer() {
 		        let result = await axios.post(`/api/v1/tx/withdraw`, this.form);
-		        console.log(result);
+		        let withdrawId = result.data.data;
+		        axios.get()
+	            this.$message(withdrawId);
             }
 		},
 		components: {
