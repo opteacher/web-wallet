@@ -5,5 +5,11 @@
 		"password": "59524148chenOP",
 		"host": "101.132.121.47",
 		"port": 3306
+	},
+	"redis": {
+		"host": "101.132.121.47",
+		"port": 6379,
+		"password": 359062,
+		"pocsSubKey": "wallet transactions process"
 	}
 }

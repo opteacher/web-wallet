@@ -13,9 +13,11 @@ const statc = require("koa-static");
 const views = require("koa-views");
 const cors = require("koa2-cors");
 
+const config = require("./config/server");
 const models = require("./models/index").index;
 const docs = require("./docs/index")({path: __dirname});
 const router = require("./routes/index");
+require("./redis/subTxProcess");
 
 const app = new Koa();
 
@@ -52,4 +54,4 @@ app.use(ctx => {
 	ctx.body = "error";
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || config.port);

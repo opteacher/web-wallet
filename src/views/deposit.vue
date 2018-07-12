@@ -25,7 +25,14 @@
                     </div>
                 </el-col>
                 <el-col :span="6">
-                    <el-button type="danger" @click="testDeposit">测试充币</el-button>
+                    <el-form ref="form">
+                        <el-form-item>
+                            <el-input v-model="testAmount" placeholder="测试的金额"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="danger" @click="testDeposit">测试充币</el-button>
+                        </el-form-item>
+                    </el-form>
                 </el-col>
             </el-row>
             <el-table
@@ -78,7 +85,8 @@
                 assetAddresses: [],
                 selectedAsset: "",
                 address: "",
-                deposits: []
+                deposits: [],
+                testAmount: 0
 			}
 		},
         methods: {
@@ -91,7 +99,7 @@
 	            this.$message((await axios.post("/api/v1/tx/deposit/test", {
 		            asset: this.selectedAsset,
 		            to: this.address,
-		            amount: 10
+		            amount: parseFloat(this.testAmount)
 	            })).data.data);
             }
         },
