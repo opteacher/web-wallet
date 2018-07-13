@@ -14,13 +14,21 @@ const db = require(`../databases/${cfg.type}`);
 const exp = {
 	"User": require("./user"),
     "Asset": require("./asset"),
+	"AssetChange": require("./assetChange"),
 	"DepositAddress": require("./depositAddress"),
 	"WithdrawAddress": require("./withdrawAddress"),
 	"WithdrawRecord": require("./withdrawRecord")
 };
+
+// @step{}:同步数据库
 if(cfg.sync) {
 	(async () => {
         await Promise.all(_.values(exp).map(model => db.sync(model)));
+        console.log("数据库模型同步完毕");
+	})();
+} else if(cfg.syncIdentified && cfg.syncIdentified.length !== 0) {
+	(async () => {
+		await Promise.all(cfg.syncIdentified.map(tname => db.sync(exp[tname])));
         console.log("数据库模型同步完毕");
 	})();
 }

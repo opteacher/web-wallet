@@ -1,11 +1,12 @@
 const _ = require("lodash");
 const router = require("koa-router")();
 const axios = require("axios");
+const moment = require("moment");
 
 const cfg = require("../../../../config/mdl.json");
 const db = require(`../../../../databases/${cfg.type}`);
 const walletCfg = require("../../../../config/wallet");
-const { DepositAddress, Asset, WithdrawAddress } = require("../../../../models/index");
+const { DepositAddress, Asset, WithdrawAddress, AssetChange } = require("../../../../models/index");
 
 router.get("/:uid/deposit/addresses", async ctx => {
     try {
@@ -115,6 +116,25 @@ router.post("/:uid/assets/:asset/address", async ctx => {
                 asset: asset,
                 desc: ctx.request.query.desc || ""
             }, null, null)
+        };
+    } catch (e) {
+        ctx.body = {
+            error: e.message ? e.message : JSON.stringify(e)
+        };
+    }
+});
+
+router.get("/:uid/assets/history", async ctx => {
+    try {
+        let result = await db.select(AssetChange, { belong_user: ctx.params.uid });
+        ctx.body = {
+            data: result.map(record => {
+                record = record.toJSON();
+                record.amount *= record.direction ? 1 : -1;
+                record.rel_id = `${record.type}_${record.rel_id}`;
+                record.createdAt = moment(record.createdAt).format("YYYY-MM-DD, hh:mm:ss a");
+                return record;
+            })
         };
     } catch (e) {
         ctx.body = {

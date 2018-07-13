@@ -29,7 +29,7 @@
                                     </el-select>
                                 </el-col>
                                 <el-col class="p-0" :span="6">
-                                    <el-button class="w-100" @click="dialogVisible = true">添加地址</el-button>
+                                    <el-button class="w-100" @click="handleAddAddress">添加地址</el-button>
                                 </el-col>
                             </el-form-item>
                             <el-form-item label="金额">
@@ -52,6 +52,17 @@
                                 title="添加地址"
                                 :visible.sync="dialogVisible"
                                 width="40%">
+                            <el-row :gutter="10">
+                                <el-col :span="12">
+                                    <el-input v-model="newAddress.desc" placeholder="输入备注（可选）">
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-input v-model="newAddress.address" placeholder="输入地址">
+                                        <el-button slot="append" @click="addAddress">添加</el-button>
+                                    </el-input>
+                                </el-col>
+                            </el-row>
                             <el-table
                                     ref="singleTable"
                                     :data="addresses"
@@ -74,6 +85,50 @@
                     </div>
                 </el-col>
             </el-row>
+            <el-table
+                    class="mt-3"
+                    :data="withdraws"
+                    height="350"
+                    style="width: 100%">
+                <el-table-column
+                        prop="id"
+                        label="#"
+                        width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="asset"
+                        label="币种"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="amount"
+                        label="金额"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="create_time"
+                        label="发起时间"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="height"
+                        label="高度"
+                        width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="tx_hash"
+                        label="交易ID">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        label="目标地址">
+                </el-table-column>
+                <el-table-column
+                        prop="status"
+                        label="状态"
+                        width="100">
+                </el-table-column>
+            </el-table>
         </div>
     </main-layout>
 </template>
@@ -82,6 +137,7 @@
 	import mainLayout from "../layouts/main"
 	import axios from "axios"
 	import cookies from "../../utils/cookies"
+    import ElRow from "element-ui/packages/row/src/row";
 
 	export default {
 		data() {
@@ -94,7 +150,12 @@
                 },
                 avaAssets: [],
                 addresses: [],
-                dialogVisible: false
+                dialogVisible: false,
+                withdraws: [],
+                newAddress: {
+                    address: "",
+                    desc: ""
+                }
 			}
 		},
 		methods: {
@@ -116,22 +177,58 @@
                 );
             },
             handleAddressChgInDlg(val) {
-                this.form.address = val.address;
+                this.form.target = val.address;
             },
             async sendTransfer() {
 		        let result = await axios.post(`/api/v1/tx/withdraw`, this.form);
-		        let withdrawId = result.data.data;
-		        axios.get()
-	            this.$message(withdrawId);
+	            this.$notify({
+                    title: "提币成功",
+                    message: `提币ID为：${result.data.data}`,
+                    type: "success"
+                });
+            },
+            async addAddress() {
+		        if(this.newAddress.address === "") {
+		            this.$message("请输入地址！");
+                }
+                let isValid = (await axios.get(`/api/v1/address/${this.newAddress.address}`, {
+                    params: { asset: this.form.asset }
+                })).data.data;
+		        if(isValid) {
+                    this.newAddress.belong_user = cookies.get("uuid");
+                    this.newAddress.asset = this.form.asset;
+		            await axios.post(`/api/v1/address`, this.newAddress);
+		            this.addresses.push(this.newAddress);
+		            this.$message({
+                        message: "地址添加成功",
+                        type: 'success'
+                    });
+                } else {
+		            this.$message("请输入有效地址！");
+                }
+            },
+            handleAddAddress() {
+		        if(this.form.asset === "") {
+		            this.$message("请现选择资产");
+                    return;
+                }
+                this.dialogVisible = true
             }
 		},
 		components: {
-			"main-layout": mainLayout
+            ElRow,
+            "main-layout": mainLayout
 		},
         async created() {
 		    try {
                 this.avaAssets = (
                     await axios.get(`/api/v1/user/${cookies.get("uuid")}/assets?empty=0`)
+                ).data.data;
+
+                this.withdraws = (
+                    await axios.get(`/api/v1/tx/withdraw`, {
+                        params: { sender_user: cookies.get("uuid") }
+                    })
                 ).data.data;
             } catch (e) {
 

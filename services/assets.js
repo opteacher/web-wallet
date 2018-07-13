@@ -1,6 +1,6 @@
 const mdlCfg = require("../config/mdl");
 const db = require(`../databases/${mdlCfg.type}`);
-const { DepositAddress } = require("../models/index");
+const { DepositAddress, AssetChange } = require("../models/index");
 
 module.exports = {
     changeAvailable(asset, address, amount) {
@@ -33,5 +33,8 @@ module.exports = {
             available: parseFloat(weight.available) + amount,
             frozen: parseFloat(weight.frozen) - amount
         }, { asset, address });
+    },
+    addChange(values) {
+        return db.save(AssetChange, values);
     }
 };

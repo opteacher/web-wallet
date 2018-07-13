@@ -3,7 +3,7 @@
         <div class="container-fluid mt-5">
             <el-row :gutter="20">
                 <el-col :span="12" :offset="6">
-                    <div class="grid-content bg-purple p-2 mb-3">
+                    <div class="grid-content bg-purple p-2">
                         <el-select class="mb-2 w-100"
                                    placeholder="选择资产"
                                    v-model="selectedAsset"
@@ -36,6 +36,7 @@
                 </el-col>
             </el-row>
             <el-table
+                    class="mt-3"
                     :data="deposits"
                     height="250"
                     style="width: 100%">
