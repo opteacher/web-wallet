@@ -9,6 +9,7 @@
                                    v-model="selectedAsset"
                                    @change="handleAssetChange">
                             <el-option v-for="item in assetAddresses"
+                                       :key="item.label"
                                        :label="item.label"
                                        :value="item.label">
                                 <span class="float-left">{{ item.label }}</span>
