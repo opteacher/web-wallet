@@ -1,33 +1,24 @@
 const _ = require("lodash");
 const router = require("koa-router")();
 const axios = require("axios");
-const moment = require("moment");
 
-const walletCfg = require("../../../../../config/wallet");
+const assetsSvc = require("../../../../services/assets");
+const walletCfg = require("../../../../config/wallet");
+const cfg = require("../../../../config/mdl.json");
+const db = require(`../../../../databases/${cfg.type}`);
+const { WithdrawAddress } = require("../../../../models/index");
 
-router.get("/", async ctx => {
+router.get("/:asset", async ctx => {
     try {
-        let query = ctx.request.query;
         let url = `${walletCfg.host}${
             walletCfg.port === 0 ? "" : `:${walletCfg.port}`
-        }/api/deposit/${query.asset}`;
-        delete query.asset;
-        let result = await axios.get(url, { params: query });
+        }/api/test/${ctx.params.asset}/mining`;
+        let result = await axios.get(url);
         if(result.status !== 200) {
             throw new Error(result.statusText);
         }
-        result = result.data;
-        if(result.code !== 200) {
-            ctx.body = result;
-            return;
-        }
-        result.data = result.data || [];
-
         ctx.body = {
-            data: result.data.map(deposit => {
-                deposit.create_time = moment(deposit.create_time).format("YYYY-MM-DD, hh:mm:ss a");
-                return deposit;
-            })
+            data: result.data.data
         };
     } catch (e) {
         ctx.body = {
@@ -36,14 +27,16 @@ router.get("/", async ctx => {
     }
 });
 
-router.post("/test", async ctx => {
+/***
+ * enable:
+ * speed[option]:
+ */
+router.put("/:asset", async ctx => {
     try {
-        let body = ctx.request.body;
         let url = `${walletCfg.host}${
             walletCfg.port === 0 ? "" : `:${walletCfg.port}`
-        }/api/test/${body.asset}/transfer`;
-        body.from = walletCfg.account;
-        let result = await axios.post(url, body);
+        }/api/test/${ctx.params.asset}/mining`;
+        let result = await axios.put(url, ctx.request.body);
         if(result.status !== 200) {
             throw new Error(result.statusText);
         }
@@ -52,7 +45,6 @@ router.post("/test", async ctx => {
             ctx.body = result;
             return;
         }
-
         ctx.body = {
             data: result.data
         };

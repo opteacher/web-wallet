@@ -97,7 +97,9 @@ router.post("/:uid/assets/:asset/address", async ctx => {
     try {
         // 生成地址
         let asset = ctx.params.asset;
-        let url = `${walletCfg.host}:${walletCfg.port}/api/deposit/${asset}/address`;
+        let url = `${walletCfg.host}${
+            walletCfg.port === 0 ? "" : `:${walletCfg.port}`
+        }/api/deposit/${asset}/address`;
         let addrResp = await axios.get(url);
         if(addrResp.status !== 200) {
             throw new Error(addrResp.statusText);

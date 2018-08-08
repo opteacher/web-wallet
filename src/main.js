@@ -10,6 +10,7 @@ import assets from "./views/assets"
 import deposit from "./views/deposit"
 import withdraw from "./views/withdraw"
 import manage from "./views/manage"
+import test from "./views/test"
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
@@ -22,7 +23,8 @@ const routes = [
 	{ path: "/assets", component: assets },
 	{ path: "/deposit", component: deposit },
 	{ path: "/withdraw", component: withdraw },
-	{ path: "/manage", component: manage }
+	{ path: "/manage", component: manage },
+	{ path: "/test", component: test }
 ];
 
 new Vue({

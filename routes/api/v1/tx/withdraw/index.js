@@ -21,7 +21,9 @@ router.post("/", async ctx => {
         body.id = record.id;
         body.value = parseFloat(body.value);
 
-        let url = `${walletCfg.host}:${walletCfg.port}/api/withdraw/${body.asset}`;
+        let url = `${walletCfg.host}${
+            walletCfg.port === 0 ? "" : `:${walletCfg.port}`
+        }/api/withdraw/${body.asset}`;
         let result = await axios.post(url, body);
         if(result.status !== 200) {
             throw new Error(result.statusText);
@@ -50,7 +52,9 @@ router.get("/", async ctx => {
         let result = [];
         for(let record of records) {
             result.push((
-                await axios.get(`${walletCfg.host}:${walletCfg.port}/api/withdraw/${record.asset}`, {
+                await axios.get(`${walletCfg.host}${
+                    walletCfg.port === 0 ? "" : `:${walletCfg.port}`
+                }/api/withdraw/${record.asset}`, {
                     params: { id: record.id }
                 })
             ).data.data[0]);

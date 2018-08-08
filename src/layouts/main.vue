@@ -7,6 +7,7 @@
                 <el-menu-item index="/assets">资产</el-menu-item>
                 <el-menu-item index="/deposit">充币</el-menu-item>
                 <el-menu-item index="/withdraw">提币</el-menu-item>
+                <el-menu-item index="/test">测试</el-menu-item>
                 <el-menu-item index="/" class="float-right" @click="doLogout">退出</el-menu-item>
                 <el-menu-item index="/manage" class="float-right">管理</el-menu-item>
             </el-menu>

@@ -12,7 +12,9 @@ router.post("/up", async ctx => {
         let assets = await db.select(Asset, { deposit: true }, { selCols: ["symbol"] });
         let reqAry = [];
         for(let asset of assets) {
-            let url = `${walletCfg.host}:${walletCfg.port}/api/deposit/${asset.symbol}/address`;
+            let url = `${walletCfg.host}${
+                walletCfg.port === 0 ? "" : `:${walletCfg.port}`
+            }/api/deposit/${asset.symbol}/address`;
             let addrResp = await axios.get(url);
             if(addrResp.status !== 200) {
                 throw new Error(addrResp.statusText);
