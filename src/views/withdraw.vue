@@ -135,7 +135,6 @@
 
 <script>
 	import mainLayout from "../layouts/main"
-	import axios from "axios"
 	import cookies from "../../utils/cookies"
     import ElRow from "element-ui/packages/row/src/row";
 
@@ -163,48 +162,70 @@
 		        this.form.asset = asset;
 		        try {
                     this.addresses = (
-                        await axios.get(`/api/v1/user/${cookies.get("uuid")}/withdraw/addresses?asset=${asset}`)
+                        await this.axios.get(`/api/v1/user/${cookies.get("uuid")}/withdraw/addresses?asset=${asset}`)
                     ).data.data;
                 } catch (e) {
-
+                    this.$notify.error({
+                        title: "错误",
+                        message: e.message ? e.message : JSON.stringify(e)
+                    })
                 }
             },
             async generateNewAddress() {
-                this.addresses.push(
-                    (
-                        await axios.post(`/api/v1/user/${cookies.get("uuid")}/assets/${this.form.asset}/address`)
-                    ).data.data
-                );
+		        try {
+                    this.addresses.push((
+                        await this.axios.post(`/api/v1/user/${cookies.get("uuid")}/assets/${this.form.asset}/address`)
+                    ).data.data);
+                } catch (e) {
+                    this.$notify.error({
+                        title: "错误",
+                        message: e.message ? e.message : JSON.stringify(e)
+                    })
+                }
             },
             handleAddressChgInDlg(val) {
                 this.form.target = val.address;
             },
             async sendTransfer() {
-		        let result = await axios.post(`/api/v1/tx/withdraw`, this.form);
-	            this.$notify({
-                    title: "提币成功",
-                    message: `提币ID为：${result.data.data}`,
-                    type: "success"
-                });
+		        try {
+                    let result = await this.axios.post(`/api/v1/tx/withdraw`, this.form);
+                    this.$notify({
+                        title: "提币成功",
+                        message: `提币ID为：${result.data.data}`,
+                        type: "success"
+                    });
+                } catch (e) {
+                    this.$notify.error({
+                        title: "错误",
+                        message: e.message ? e.message : JSON.stringify(e)
+                    })
+                }
             },
             async addAddress() {
 		        if(this.newAddress.address === "") {
 		            this.$message("请输入地址！");
                 }
-                let isValid = (await axios.get(`/api/v1/address/${this.newAddress.address}`, {
-                    params: { asset: this.form.asset }
-                })).data.data;
-		        if(isValid) {
-                    this.newAddress.belong_user = cookies.get("uuid");
-                    this.newAddress.asset = this.form.asset;
-		            await axios.post(`/api/v1/address`, this.newAddress);
-		            this.addresses.push(this.newAddress);
-		            this.$message({
-                        message: "地址添加成功",
-                        type: 'success'
-                    });
-                } else {
-		            this.$message("请输入有效地址！");
+                try {
+                    let isValid = (await this.axios.get(`/api/v1/address/${this.newAddress.address}`, {
+                        params: { asset: this.form.asset }
+                    })).data.data;
+                    if(isValid) {
+                        this.newAddress.belong_user = cookies.get("uuid");
+                        this.newAddress.asset = this.form.asset;
+                        await this.axios.post(`/api/v1/address`, this.newAddress);
+                        this.addresses.push(this.newAddress);
+                        this.$message({
+                            message: "地址添加成功",
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message("请输入有效地址！");
+                    }
+                } catch (e) {
+                    this.$notify.error({
+                        title: "错误",
+                        message: e.message ? e.message : JSON.stringify(e)
+                    })
                 }
             },
             handleAddAddress() {
@@ -222,16 +243,17 @@
         async created() {
 		    try {
                 this.avaAssets = (
-                    await axios.get(`/api/v1/user/${cookies.get("uuid")}/assets?empty=0`)
+                    await this.axios.get(`/api/v1/user/${cookies.get("uuid")}/assets?empty=0`)
                 ).data.data;
 
-                this.withdraws = (
-                    await axios.get(`/api/v1/tx/withdraw`, {
+                this.withdraws = (await this.axios.get(`/api/v1/tx/withdraw`, {
                         params: { sender_user: cookies.get("uuid") }
-                    })
-                ).data.data;
+                })).data.data;
             } catch (e) {
-
+                this.$notify.error({
+                    title: "错误",
+                    message: e.message ? e.message : JSON.stringify(e)
+                })
             }
         }
 	}

@@ -7,9 +7,9 @@
 		"port": 3306
 	},
 	"redis": {
-		"host": "127.0.0.1",
+		"host": "101.132.121.47",
 		"port": 6379,
-		"password": 359062,
+		"password": "abcd",
 		"pocsSubKey": "wallet transactions process"
 	}
 }

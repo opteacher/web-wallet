@@ -36,7 +36,6 @@
 
 <script>
 	import mainLayout from "../layouts/main"
-    import axios from "axios"
 
 	export default {
 		data() {
@@ -55,8 +54,7 @@
 		},
 		methods: {
 			async doLogup() {
-				let result = await axios.post("/api/v1/user/log/up", this.form);
-				console.log(result);
+				let result = await this.axios.post("/api/v1/user/log/up", this.form);
 				window.location.href = "/#/login"
             },
 			toLogin() {

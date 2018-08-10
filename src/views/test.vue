@@ -35,7 +35,6 @@
 
 <script>
     import mainLayout from "../layouts/main"
-    import axios from "axios"
     import cookies from "../../utils/cookies"
     import _ from "lodash"
 
@@ -57,7 +56,7 @@
                 this.$notify({
                     title: "提示",
                     type: "success",
-                    message: (await axios.post("/api/v1/tx/deposit/test", {
+                    message: (await this.axios.post("/api/v1/tx/deposit/test", {
                         asset: this.selectedAsset,
                         to: this.selectedAddress,
                         amount: parseFloat(this.depositAmount)
@@ -71,7 +70,7 @@
                 }).value;
 
                 try {
-                    this.enableMining = (await axios.get(
+                    this.enableMining = (await this.axios.get(
                         `/api/v1/miner/${this.selectedAsset}`
                     )).data.data
                 } catch (e) {
@@ -89,7 +88,7 @@
                 }
                 try {
                     let url = `/api/v1/miner/${this.selectedAsset}`;
-                    let result = (await axios.put(url, {
+                    let result = (await this.axios.put(url, {
                         enable: this.enableMining
                     })).data.data;
                     if(result) {
@@ -109,14 +108,17 @@
         async created() {
             try {
                 let url = `/api/v1/user/${cookies.get("uuid")}/deposit/addresses`;
-                this.assetAddresses = (await axios.get(url)).data.data.map(item => {
+                this.assetAddresses = (await this.axios.get(url)).data.data.map(item => {
                     return {
                         label: item.asset,
                         value: item.address
                     }
                 })
             } catch (e) {
-                // @_@：页面上要对用户做交代
+                this.$notify.error({
+                    title: "错误",
+                    message: e.message ? e.message : JSON.stringify(e)
+                })
             }
         }
     }

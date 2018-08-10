@@ -54,7 +54,6 @@
 
 <script>
 	import mainLayout from "../layouts/main"
-    import axios from "axios"
     import cookies from "../../utils/cookies"
     import _ from "lodash"
 
@@ -75,19 +74,26 @@
 			"main-layout": mainLayout
 		},
         async created() {
-		    this.tableData = (
-                await axios.get(`/api/v1/user/${cookies.get("uuid")}/assets`)
-            ).data.data;
+		    try {
+                this.tableData = (
+                    await this.axios.get(`/api/v1/user/${cookies.get("uuid")}/assets`)
+                ).data.data;
 
-		    this.assetChanges = (
-		        await axios.get(`/api/v1/user/${cookies.get("uuid")}/assets/history`)
-            ).data.data;
-		    this.assetChgTypes = _.unionBy(this.assetChanges.map(item => {
-		        return { text: item.type, value: item.type };
-            }), "value");
-		    this.assetTypes = _.unionBy(this.assetChanges.map(item => {
-		        return { text: item.asset, value: item.asset };
-            }), "value");
+                this.assetChanges = (
+                    await this.axios.get(`/api/v1/user/${cookies.get("uuid")}/assets/history`)
+                ).data.data;
+                this.assetChgTypes = _.unionBy(this.assetChanges.map(item => {
+                    return { text: item.type, value: item.type };
+                }), "value");
+                this.assetTypes = _.unionBy(this.assetChanges.map(item => {
+                    return { text: item.asset, value: item.asset };
+                }), "value");
+            } catch (e) {
+                this.$notify.error({
+                    title: "错误",
+                    message: e.message ? e.message : JSON.stringify(e)
+                })
+            }
         }
 	}
 </script>

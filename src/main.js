@@ -1,34 +1,22 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import VueResource from "vue-resource"
+import VueAxios from "vue-axios"
 import ElementUI from "element-ui";
 import 'element-ui/lib/theme-chalk/index.css';
-import home from "./views/home"
-import login from "./views/login"
-import logup from "./views/logup"
-import assets from "./views/assets"
-import deposit from "./views/deposit"
-import withdraw from "./views/withdraw"
-import manage from "./views/manage"
-import test from "./views/test"
+import axios from "axios"
+import routes from "./routes"
 
-Vue.use(VueResource);
 Vue.use(VueRouter);
+Vue.use(VueAxios, axios);
+Vue.axios.defaults.baseURL = 'https://api-demo.websanova.com/api/v1';
 Vue.use(ElementUI);
 
-const routes = [
-	{ path: "/", component: home },
-	{ path: "/login", component: login },
-	{ path: "/logup", component: logup },
-	{ path: "/assets", component: assets },
-	{ path: "/deposit", component: deposit },
-	{ path: "/withdraw", component: withdraw },
-	{ path: "/manage", component: manage },
-	{ path: "/test", component: test }
-];
+Vue.router = new VueRouter({ routes });
 
-new Vue({
-	router: new VueRouter({routes})
-}).$mount("#app");
+Vue.use(require('@websanova/vue-auth'), {
+    auth:   require('@websanova/vue-auth/drivers/auth/bearer.js'),
+    http:   require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
+    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js')
+});
 
-export default routes
+new Vue(routes[0].component).$mount("#app");

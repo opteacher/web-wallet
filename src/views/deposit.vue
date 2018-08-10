@@ -66,7 +66,6 @@
 
 <script>
 	import mainLayout from "../layouts/main"
-    import axios from "axios"
     import cookies from "../../utils/cookies"
     import qrcode from "qrcode"
 
@@ -93,7 +92,7 @@
         async created() {
 		    try {
 		        let url = `/api/v1/user/${cookies.get("uuid")}/deposit/addresses`;
-                this.assetAddresses = (await axios.get(url)).data.data.map(item => {
+                this.assetAddresses = (await this.axios.get(url)).data.data.map(item => {
                     return {
                         label: item.asset,
                         value: item.address
@@ -104,14 +103,17 @@
                 let cvsQRCode = document.getElementById("cvsQRCode");
                 qrcode.toCanvas(cvsQRCode, this.address, { width: 400 });
 
-                this.deposits = (await axios.get("/api/v1/tx/deposit", {
+                this.deposits = (await this.axios.get("/api/v1/tx/deposit", {
                     params: {
                         asset: this.selectedAsset,
                         address: this.address
                     }
                 })).data.data;
             } catch (e) {
-		        // @_@：页面上要对用户做交代
+                this.$notify.error({
+                    title: "错误",
+                    message: e.message ? e.message : JSON.stringify(e)
+                })
             }
         }
 	}
