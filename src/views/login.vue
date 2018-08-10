@@ -6,13 +6,13 @@
                     <div class="grid-content bg-purple p-3">
                         <el-form ref="form" :model="form">
                             <el-form-item>
-                                <el-input v-model="form.username" placeholder="用户名/邮箱/手机"></el-input>
+                                <el-input v-model="form.body.username" placeholder="用户名/邮箱/手机"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-input v-model="form.password" placeholder="密码"></el-input>
+                                <el-input v-model="form.body.password" placeholder="密码"></el-input>
                             </el-form-item>
                             <el-form-item label="">
-                                <el-checkbox label="保存登陆信息" name="type"></el-checkbox>
+                                <el-checkbox v-model="form.rememberMe" label="保存登陆信息" name="type"></el-checkbox>
                             </el-form-item>
                             <el-form-item class="mb-0">
                                 <el-button @click="doLogin" type="primary">登录</el-button>
@@ -35,8 +35,11 @@
 		data() {
 			return {
 				form: {
-					username: "",
-					password: ""
+					body: {
+						username: "",
+						password: ""
+                    },
+                    rememberMe: false
 				}
 			}
 		},
@@ -47,9 +50,18 @@
 			toLogup() {
 				window.location.href = "/#/logup"
 			},
-			doLogin() {
-				cookies.set("uuid", this.form.username);
-				window.location.href = "/#/"
+			async doLogin() {
+				try {
+					await this.$auth.login({
+						data: this.form,
+						url: "/api/v1/user/log/in",
+						rememberMe: this.form.rememberMe,
+                        fetchUser: true,
+						redirect: "/#/"
+					});
+                } catch (e) {
+                    console.log(this.$auth.redirect());
+				}
             }
 		}
 	}

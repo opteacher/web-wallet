@@ -44,7 +44,7 @@ router.post("/up", async ctx => {
     }
 });
 
-router.put("/in", async ctx => {
+router.post("/in", async ctx => {
     ctx.body = {
         data: "abcd"
     };

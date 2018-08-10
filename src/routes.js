@@ -7,13 +7,46 @@ import withdraw from "./views/withdraw"
 import manage from "./views/manage"
 import test from "./views/test"
 
-export default [
-    { path: "/", component: home },
-    { path: "/login", component: login },
-    { path: "/logup", component: logup },
-    { path: "/assets", component: assets },
-    { path: "/deposit", component: deposit },
-    { path: "/withdraw", component: withdraw },
-    { path: "/manage", component: manage },
-    { path: "/test", component: test }
-];
+export default [{
+	path: "/",
+	component: home,
+	meta: {auth: false}
+}, {
+	path: "/login",
+	component: login,
+	meta: {auth: false}
+}, {
+	path: "/logup",
+	component: logup,
+	meta: {auth: false}
+}, {
+	path: "/assets",
+	component: assets,
+	meta: {
+		auth: {redirect: "/login"}
+	}
+}, {
+	path: "/deposit",
+	component: deposit,
+	meta: {
+		auth: {redirect: "/login"}
+	}
+}, {
+	path: "/withdraw",
+	component: withdraw,
+	meta: {
+		auth: {redirect: "/login"}
+	}
+}, {
+	path: "/manage",
+	component: manage,
+	meta: {
+		auth: {redirect: "/login"}
+	}
+}, {
+	path: "/test",
+	component: test,
+	meta: {
+		auth: {redirect: "/login"}
+	}
+}];

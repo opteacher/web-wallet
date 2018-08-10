@@ -1,8 +1,8 @@
 <template>
-    <el-container v-loading.fullscreen.lock="!$auth.ready()" class="content-layout">
+    <el-container class="content-layout">
         <el-header class="p-0" height="50">
-            <nav v-if="loginUserId !== undefined" class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href="#">Web钱包</a>
+            <nav v-if="$auth.check()" class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="/#/">Web钱包</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -22,18 +22,18 @@
                             <a class="nav-link" :class="{ active: actIdx === '/#/test' }" href="/#/test">测试</a>
                         </li>
                     </ul>
-                    <ul class="my-2 my-lg-0">
+                    <ul class="navbar-nav my-2 my-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" :class="{ active: actIdx === '/#/manage' }" href="/#/manage">管理</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/#/">退出</a>
+                            <a class="nav-link" @click="doLogout">退出</a>
                         </li>
                     </ul>
                 </div>
             </nav>
             <nav v-else class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand"  :class="{ active: actIdx === '/#/' }" href="/#/">Web钱包</a>
+                <a class="navbar-brand" href="/#/">Web钱包</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -63,25 +63,19 @@
 	export default {
 		data() {
 			return {
-				actIdx: "/#/",
-				loginUserId: undefined
+				actIdx: "/#/"
 			}
 		},
 		methods: {
 			doLogout() {
 				cookies.clear("uuid");
 				this.loginUserId = undefined;
+				window.location.href = "/#/";
             }
 		},
-        created() {
-	        this.loginUserId = cookies.get("uuid");
-
-            this.$auth.ready(function () {
-                console.log('ready ' + this.context);
-            });
-        },
         mounted() {
             this.actIdx = `/${window.location.hash.split("?")[0]}`;
+            console.log(this.$auth.check());
         }
 	};
 </script>

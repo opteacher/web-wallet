@@ -8,7 +8,7 @@ import routes from "./routes"
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
-Vue.axios.defaults.baseURL = 'https://api-demo.websanova.com/api/v1';
+// Vue.axios.defaults.baseURL = 'https://api-demo.websanova.com/api/v1';
 Vue.use(ElementUI);
 
 Vue.router = new VueRouter({ routes });
@@ -19,4 +19,11 @@ Vue.use(require('@websanova/vue-auth'), {
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js')
 });
 
-new Vue(routes[0].component).$mount("#app");
+new Vue({
+    template: `
+        <div v-loading.fullscreen.lock="!$auth.ready()">
+            <router-view></router-view>
+        </div>
+    `,
+    router: Vue.router
+}).$mount("#app");
