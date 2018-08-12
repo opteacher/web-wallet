@@ -45,9 +45,26 @@ router.post("/up", async ctx => {
 });
 
 router.post("/in", async ctx => {
+    // 签发token
     ctx.body = {
         data: "abcd"
     };
+});
+
+router.get("/stat", async ctx => {
+	// 从请求头中获取token并验证
+    console.log(ctx.request.params);
+    ctx.set("authorization", "0xabcd");
+    ctx.body = {
+        data: "1234"
+    }
+});
+
+router.get("/refs", async ctx => {
+	// 如果token过期，重新签发
+    ctx.body = {
+        data: "0xabcd"
+    }
 });
 
 module.exports = router;

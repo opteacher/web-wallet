@@ -9,8 +9,7 @@ import test from "./views/test"
 
 export default [{
 	path: "/",
-	component: home,
-	meta: {auth: false}
+	component: home
 }, {
 	path: "/login",
 	component: login,
@@ -22,31 +21,21 @@ export default [{
 }, {
 	path: "/assets",
 	component: assets,
-	meta: {
-		auth: {redirect: "/login"}
-	}
+	meta: {auth: true}
 }, {
 	path: "/deposit",
 	component: deposit,
-	meta: {
-		auth: {redirect: "/login"}
-	}
+	meta: {auth: true}
 }, {
 	path: "/withdraw",
 	component: withdraw,
-	meta: {
-		auth: {redirect: "/login"}
-	}
+	meta: {auth: true}
 }, {
 	path: "/manage",
 	component: manage,
-	meta: {
-		auth: {redirect: "/login"}
-	}
+	meta: {auth: true}
 }, {
 	path: "/test",
 	component: test,
-	meta: {
-		auth: {redirect: "/login"}
-	}
+	meta: {auth: true}
 }];

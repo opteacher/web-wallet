@@ -57,10 +57,14 @@
 						url: "/api/v1/user/log/in",
 						rememberMe: this.form.rememberMe,
                         fetchUser: true,
-						redirect: "/#/"
+						redirect: "/"
 					});
                 } catch (e) {
                     console.log(this.$auth.redirect());
+					this.$notify.error({
+						title: "错误",
+						message: e.message ? e.message : JSON.stringify(e)
+					})
 				}
             }
 		}

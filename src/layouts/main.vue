@@ -68,14 +68,11 @@
 		},
 		methods: {
 			doLogout() {
-				cookies.clear("uuid");
-				this.loginUserId = undefined;
-				window.location.href = "/#/";
+				this.$auth.logout();
             }
 		},
         mounted() {
             this.actIdx = `/${window.location.hash.split("?")[0]}`;
-            console.log(this.$auth.check());
         }
 	};
 </script>
